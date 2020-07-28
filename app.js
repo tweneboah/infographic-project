@@ -1,13 +1,27 @@
-// Create Dino Constructor
+/** @format */
+
 /**
- * @param  {Dino's species} species
- * @param  {Dino's weight} weight
- * @param  {Dino's height} height
- * @param  {Dino's diet} diet
- * @param  {Where the Dino comes from} where
- * @param  {date of the Dino} when
- * @param  {fact about the dino} fact
- * @param {desc} Constructor
+ * @param desc {getting DOM Strings}
+ */
+const DOMStrings = (function () {
+  let humanCompareForm = document.querySelector("#dino-compare");
+  let name = document.querySelector("#name");
+  let height = document.querySelector("#height");
+  let weight = document.querySelector("#weight");
+  let diet = document.querySelector("#diet");
+  let dinoContainer = document.querySelector(".dino_container");
+  return {
+    humanCompareForm,
+    name,
+    height,
+    weight,
+    diet,
+    dinoContainer,
+  };
+})();
+
+/**
+@param desc {Dino Constructor}
  */
 function Dino(species, weight, height, diet, where, when, fact) {
   this.species = species;
@@ -19,13 +33,41 @@ function Dino(species, weight, height, diet, where, when, fact) {
   this.fact = fact;
 }
 
-// Create Dino Objects
-const dino1 = new Dino();
+/**
+@param desc {Creating Dino objects}
+ */
+
+const DinoController = (async function () {
+  //Fetch Json data
+  let data = await fetch("./dino.json");
+  let dinoDataFetched = await data.json();
+  let dinosData = [];
+  dinoDataFetched.Dinos.forEach((dino) => {
+    let newDinoObj = new Dino(
+      dino.species,
+      dino.weight,
+      dino.height,
+      dino.diet,
+      dino.where,
+      dino.when,
+      dino.fact
+    );
+    dinosData.push(newDinoObj);
+    return newDinoObj;
+  });
+  return dinosData;
+})();
 
 // Create Human Object
+function HumanData(name, height, weight, diet) {
+  this.name = name;
+  this.height = height;
+  this.weight = weight;
+  this.diet = diet;
+}
 
 // Use IIFE to get human data from form
-
+const HumanDataController = function (UICtrl) {};
 // Create Dino Compare Method 1
 // NOTE: Weight in JSON file is in lbs, height in inches.
 
@@ -43,5 +85,21 @@ const dino1 = new Dino();
 
 // On button click, prepare and display infographic
 
-
-
+/**
+ * @param desc {UI Controller}
+ */
+const UIController = (async function (DinoCtrl, DOMStr) {
+  //get the dinoContainer DOM
+  let dinoContainer = DOMStr.dinoContainer;
+  const dinoData = await DinoCtrl;
+  let html = "";
+  dinoData.forEach((data) => {
+    html += `<div id='child1'>
+    <h2>${data.species}</h2>
+    <p>${data.fact}</p>
+    <p>${data.diet}</p>
+    </div>`;
+  });
+  //append to DOM
+  dinoContainer.innerHTML = html;
+})(DinoController, DOMStrings);
