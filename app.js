@@ -1,28 +1,19 @@
 /** @format */
 
-/**
- * @param desc {getting DOM Strings}
- */
-const DOMStrings = (function () {
-  let humanCompareForm = document.querySelector("#dino-compare");
-  let name = document.querySelector("#name");
-  let height = document.querySelector("#height");
-  let weight = document.querySelector("#weight");
-  let diet = document.querySelector("#diet");
-  let dinoContainer = document.querySelector(".dino_container");
-  return {
-    humanCompareForm,
-    name,
-    height,
-    weight,
-    diet,
-    dinoContainer,
-  };
-})();
+//============
+//Get DOM Strings
+//=============
+let humanCompareForm = document.querySelector("#dino-compare");
+let name = document.querySelector("#name");
+let height = document.querySelector("#height");
+let weight = document.querySelector("#weight");
+let diet = document.querySelector("#diet");
+let btn = document.querySelector(".btn");
+let dinoContainer = document.querySelector(".dino_container");
 
-/**
-@param desc {Dino Constructor}
- */
+//=============
+//Dino Constructor
+//=============
 function Dino(species, weight, height, diet, where, when, fact) {
   this.species = species;
   this.weight = weight;
@@ -31,18 +22,19 @@ function Dino(species, weight, height, diet, where, when, fact) {
   this.wwhere = where;
   this.when = when;
   this.fact = fact;
+  this.image = `./images/${species.toLowerCase()}.png`;
 }
 
-/**
-@param desc {Creating Dino objects}
- */
-
+//===============
+//Dino controller for fetching and creating dino objects
+//===============
 const DinoController = (async function () {
   //Fetch Json data
   let data = await fetch("./dino.json");
   let dinoDataFetched = await data.json();
   let dinosData = [];
   dinoDataFetched.Dinos.forEach((dino) => {
+    //create instant of dino object
     let newDinoObj = new Dino(
       dino.species,
       dino.weight,
@@ -85,21 +77,43 @@ const HumanDataController = function (UICtrl) {};
 
 // On button click, prepare and display infographic
 
-/**
- * @param desc {UI Controller}
- */
-const UIController = (async function (DinoCtrl, DOMStr) {
-  //get the dinoContainer DOM
-  let dinoContainer = DOMStr.dinoContainer;
-  const dinoData = await DinoCtrl;
-  let html = "";
-  dinoData.forEach((data) => {
-    html += `<div id='child1'>
+//=====================
+//UI Controller for getting
+//=====================
+const UIController = (async function (DinoCtrl) {
+  try {
+    //Get the Dino data from dino controller
+    const dinoData = await DinoCtrl;
+    let html = "";
+    dinoData.forEach((data) => {
+      html += `<div id='child1'>
     <h2>${data.species}</h2>
     <p>${data.fact}</p>
     <p>${data.diet}</p>
+    <img class='dino_image' src='${data.image}'/>
     </div>`;
-  });
-  //append to DOM
-  dinoContainer.innerHTML = html;
-})(DinoController, DOMStrings);
+    });
+    return html;
+  } catch (error) {
+    console.log(error);
+  }
+})(DinoController);
+
+//=====================
+//App controller where the app events occures
+//====================
+const appController = (async function (UIController) {
+  try {
+    //Get the dino html to be displayed
+    const data = await UIController;
+    //Form button event Listeners
+    btn.addEventListener("click", function () {
+      //Hide the form
+      humanCompareForm.style.display = "none";
+      //Append the html
+      dinoContainer.innerHTML = data;
+    });
+  } catch (error) {
+    console.log(error);
+  }
+})(UIController);
