@@ -3,13 +3,28 @@
 //============
 //Get DOM Strings
 //=============
-let humanCompareForm = document.querySelector("#dino-compare");
-let name = document.querySelector("#name");
-let height = document.querySelector("#height");
-let weight = document.querySelector("#weight");
-let diet = document.querySelector("#diet");
-let btn = document.querySelector(".btn");
-let dinoContainer = document.querySelector(".dino_container");
+const DOMStrings = (function () {
+  let humanCompareForm = document.querySelector("#dino-compare");
+  let name = document.querySelector("#name");
+  let height = document.querySelector("#height");
+  let weight = document.querySelector("#weight");
+  let diet = document.querySelector("#diet");
+  let btn = document.querySelector(".btn");
+  let dinoContainer = document.querySelector(".dino_container");
+  return {
+    getDOMStrings: function () {
+      return {
+        humanCompareForm,
+        name,
+        height,
+        weight,
+        diet,
+        btn,
+        dinoContainer,
+      };
+    },
+  };
+})();
 
 //=============
 //Dino Constructor
@@ -59,7 +74,25 @@ function HumanData(name, height, weight, diet) {
 }
 
 // Use IIFE to get human data from form
-const HumanDataController = function (UICtrl) {};
+const HumanDataController = (function (DOMStr) {
+  //get DOM VALUES
+  let humanName = DOMStr.getDOMStrings().name;
+  let humanHeight = DOMStr.getDOMStrings().height;
+  let humanWeight = DOMStr.getDOMStrings().weight;
+  let humanDiet = DOMStr.getDOMStrings().diet;
+  function getHumanData() {
+    return {
+      humanName: humanName.value,
+      humanHeight: humanHeight.value,
+      humanWeight: humanWeight.value,
+      humanDiet: humanDiet.value,
+    };
+  }
+  return {
+    getHumanData,
+  };
+})(DOMStrings);
+
 // Create Dino Compare Method 1
 // NOTE: Weight in JSON file is in lbs, height in inches.
 
@@ -102,18 +135,33 @@ const UIController = (async function (DinoCtrl) {
 //=====================
 //App controller where the app events occures
 //====================
-const appController = (async function (UIController) {
+const appController = (async function (
+  UIController,
+  HumanDataController,
+  DOMStr
+) {
   try {
     //Get the dino html to be displayed
-    const data = await UIController;
+    let data = await UIController;
+    //get DOM Strings
+    let dinoContainer = DOMStr.getDOMStrings().dinoContainer;
+    let btn = DOMStr.getDOMStrings().btn;
+    let humanCompareForm = DOMStr.getDOMStrings().humanCompareForm;
+    let humanName = DOMStr.getDOMStrings().name;
     //Form button event Listeners
     btn.addEventListener("click", function () {
       //Hide the form
       humanCompareForm.style.display = "none";
       //Append the html
+
+      //get human data from the form
+      const humanData = HumanDataController.getHumanData();
+      alert(JSON.stringify(humanData));
+
       dinoContainer.innerHTML = data;
+      console.log(data);
     });
   } catch (error) {
     console.log(error);
   }
-})(UIController);
+})(UIController, HumanDataController, DOMStrings);
