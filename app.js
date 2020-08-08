@@ -2,12 +2,13 @@ const anklyosaurusDOM = document.querySelector(".dino1");
 const brachiosaurusDOM = document.querySelector(".dino2");
 const elasmosaurusDOM = document.querySelector(".dino3");
 const pigeonDOM = document.querySelector(".dino4");
-const human = document.querySelector(".human");
+const humanDOM = document.querySelector(".human");
 const pteranodonDOM = document.querySelector(".dino5");
 const stegosaurusDOM = document.querySelector(".dino6");
 const triceratopsDOM = document.querySelector(".dino7");
 const tyrannosaurusRexDOM = document.querySelector(".dino8");
 const mainGridContainer = document.querySelector("#grid");
+
 
 const dinoCompare = document.querySelector("#dino-compare");
 const btn = document.querySelector("#btn");
@@ -94,21 +95,46 @@ const tyrannosaurusRexObj = new Dino(
 
 //Human constructor
 
-function Human(name, feet, weight, diet) {
+function Human(name, height, weight, diet) {
   this.name = name;
-  this.feet = feet;
+  this.height = height;
   this.weight = weight;
   this.diet = diet
 }
 
 // Use IIFE to get human data from form
 
-(function getHumanData() {
-  console.log('Human data')
+const getHumanData = (function () {
+  //HUMAN DOM
+  const humanWeightDOM = document.querySelector("#weight");
+  const humanDietDOM = document.querySelector("#diet");
+  const humanNameDOM = document.querySelector("#name");
+  const humanHeightDOM = document.querySelector("#height");
+
+  function getData() {
+    return {
+      nameValue: humanNameDOM.value,
+      weightValue: humanWeightDOM.value,
+      heightValue: humanHeightDOM.value,
+      humanDietValue: humanDietDOM.value
+
+    }
+  }
+
+  return {
+    getData
+  }
 })()
 
 // Create Human Object
 
+
+
+function createHumanObj() {
+  const humanData = getHumanData.getData();
+  const humanObj = new Human(humanData.nameValue, humanData.weightValue, humanData.heightValue, humanData.humanDietValue);
+  return humanObj
+}
 
 // Create Dino Compare Method 1
 // NOTE: Weight in JSON file is in lbs, height in inches.
@@ -168,6 +194,12 @@ function addTtiles() {
   <img src="${tyrannosaurusRexObj.image}" alt="">
   <p>${tyrannosaurusRexObj.fact}
   </p>`;
+
+  //Create human object and add to the dom
+  const humanData = createHumanObj()
+  console.log(humanData.name)
+  humanDOM.innerHTML = `  <h3>${humanData.name}</h3>
+ `
 }
 
 // Remove form from screen
@@ -177,5 +209,5 @@ function removeForm() {
 // On button click, prepare and display infographic
 btn.addEventListener("click", (e) => {
   addTtiles();
-  removeForm();
+
 });
