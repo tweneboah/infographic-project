@@ -13,16 +13,18 @@ const mainGridContainer = document.querySelector("#grid");
 const dinoCompare = document.querySelector("#dino-compare");
 const btn = document.querySelector("#btn");
 
-0
+
 // Create Dino Constructor
-function Dino(species, image, fact) {
+function Dino(species, image, fact, weight, height) {
   this.species = species;
   this.image = image;
   this.fact = fact;
+  this.weight = weight;
+  this.height = height
 }
 
-// Dinos random facts
 
+// Dinos random facts
 const facts = [
   "First discovered in 1889 by Othniel Charles Marsh",
   "The largest known skull measures in at 5 feet long.",
@@ -48,49 +50,65 @@ const tyrannosaurusRexRandom = Math.floor(Math.random() * facts.length);
 const anklyosaurusObj = new Dino(
   "Anklyosaurus",
   "./images/anklyosaurus.png",
-  facts[anklyosaurusRandom]
+  facts[anklyosaurusRandom],
+  10500,
+  55,
+
 );
 
 const brachiosaurusObj = new Dino(
   "Brachiosaurus",
   "./images/brachiosaurus.png",
-  facts[brachiosaurusRandom]
+  facts[brachiosaurusRandom],
+  70000,
+  372,
 );
 
 const elasmosaurusObj = new Dino(
   "Elasmosaurus",
   "./images/elasmosaurus.png",
-  facts[elasmosaurusRandom]
+  facts[elasmosaurusRandom],
+  16000,
+  59,
 );
 
 const pigeonObj = new Dino(
   "Pigeon",
   "./images/pigeon.png",
-  facts[pigeonRandom]
+  facts[pigeonRandom],
+  0.5,
+  9,
 );
 
 const pteranodonObj = new Dino(
   "Pteranodon",
   "./images/pteranodon.png",
-  facts[pteranodonRandom]
+  facts[pteranodonRandom],
+  44,
+  20,
 );
 
 const stegosaurusObj = new Dino(
   "Stegosaurus",
   "./images/stegosaurus.png",
-  facts[stegosaurusRandom]
+  facts[stegosaurusRandom],
+  11600,
+  79,
 );
 
 const triceratopsObj = new Dino(
   "Triceratops",
   "./images/triceratops.png",
-  facts[triceratopsRandom]
+  facts[triceratopsRandom], 13000,
+  114,
 );
 
 const tyrannosaurusRexObj = new Dino(
   "Tyrannosaurus Rex",
   "./images/tyrannosaurusrex.png",
-  facts[tyrannosaurusRexRandom]
+  facts[tyrannosaurusRexRandom],
+  11905,
+  144,
 );
 
 //Human constructor
@@ -127,9 +145,6 @@ const getHumanData = (function () {
 })()
 
 // Create Human Object
-
-
-
 function createHumanObj() {
   const humanData = getHumanData.getData();
   const humanObj = new Human(humanData.nameValue, humanData.weightValue, humanData.heightValue, humanData.humanDietValue);
@@ -138,14 +153,35 @@ function createHumanObj() {
 
 // Create Dino Compare Method 1
 // NOTE: Weight in JSON file is in lbs, height in inches.
+function checkWeight(dinoObj, humanObj) {
+  let message;
+  //convert  lbs to kg;
+  let dinoConvertedWeight = (dinoObj.weight * 0.453592)
+  //convert humans weight to number
+  let humanConvertedWeight = parseInt(humanObj.weightValue).toFixed(2)
+  if (dinoConvertedWeight > humanConvertedWeight) {
+    message = `This dino is ${(dinoConvertedWeight - humanConvertedWeight).toFixed(2)} old than the human`
+    return message
+  } else {
+
+    message = `This human is ${humanConvertedWeight - dinoConvertedWeight  } old than the Dino`
+  }
+}
 
 // Create Dino Compare Method 2
 // NOTE: Weight in JSON file is in lbs, height in inches.
+function checkHeight(dinoObj, humanObj) {
+
+}
+
 
 // Create Dino Compare Method 3
 // NOTE: Weight in JSON file is in lbs, height in inches.
+function typeOfDiet(dinoObj, humanObj) {
 
+}
 // Generate Tiles for each Dino in Array
+
 
 // Add tiles to DOM
 function addTtiles() {
@@ -197,8 +233,11 @@ function addTtiles() {
 
   //Create human object and add to the dom
   const humanData = createHumanObj()
-  console.log(humanData.name)
-  humanDOM.innerHTML = `  <h3>${humanData.name}</h3>
+  let res = checkWeight(tyrannosaurusRexObj, getHumanData.getData())
+
+  humanDOM.innerHTML = `
+   <h3>${humanData.name}</h3>
+  <p>${res}</p>
  `
 }
 
@@ -209,5 +248,8 @@ function removeForm() {
 // On button click, prepare and display infographic
 btn.addEventListener("click", (e) => {
   addTtiles();
+  removeForm()
+  let res = checkWeight(tyrannosaurusRexObj, getHumanData.getData())
+  console.log(res)
 
 });
