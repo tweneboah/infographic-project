@@ -1,255 +1,135 @@
-const anklyosaurusDOM = document.querySelector(".dino1");
-const brachiosaurusDOM = document.querySelector(".dino2");
-const elasmosaurusDOM = document.querySelector(".dino3");
-const pigeonDOM = document.querySelector(".dino4");
-const humanDOM = document.querySelector(".human");
-const pteranodonDOM = document.querySelector(".dino5");
-const stegosaurusDOM = document.querySelector(".dino6");
-const triceratopsDOM = document.querySelector(".dino7");
-const tyrannosaurusRexDOM = document.querySelector(".dino8");
-const mainGridContainer = document.querySelector("#grid");
-
-
+//Get DOM Strings
 const dinoCompare = document.querySelector("#dino-compare");
 const btn = document.querySelector("#btn");
+const dinoDOMString = document.querySelector(".grid-item");
+const grid = document.querySelector("#grid");
 
+/**
+ * @constructor Dino Constructor
+ * @param {string} species - The species of the Dino
+ * @param {sting} image - The image of the Dion
+ * @param {string} fact - The fact of the Dino
+ * @param {string} weight - The weight of the Dino
+ * @param {string} height - The height of the Dino
+ */
 
-// Create Dino Constructor
 function Dino(species, image, fact, weight, height) {
   this.species = species;
   this.image = image;
   this.fact = fact;
   this.weight = weight;
-  this.height = height
-}
-
-
-// Dinos random facts
-const facts = [
-  "First discovered in 1889 by Othniel Charles Marsh",
-  "The largest known skull measures in at 5 feet long.",
-  "Anklyosaurus survived for approximately 135 million years.",
-  "An asteroid was named 9954 Brachiosaurus in 1991.",
-  "Elasmosaurus was a marine reptile first discovered in Kansas.",
-  "Actually a flying reptile, the Pteranodon is not a dinosaur.",
-  "All birds are living dinosaurs.",
-];
-
-//Dinos random number
-
-const anklyosaurusRandom = Math.floor(Math.random() * facts.length);
-const brachiosaurusRandom = Math.floor(Math.random() * facts.length);
-const elasmosaurusRandom = Math.floor(Math.random() * facts.length);
-const pigeonRandom = Math.floor(Math.random() * facts.length);
-const pteranodonRandom = Math.floor(Math.random() * facts.length);
-const stegosaurusRandom = Math.floor(Math.random() * facts.length);
-const triceratopsRandom = Math.floor(Math.random() * facts.length);
-const tyrannosaurusRexRandom = Math.floor(Math.random() * facts.length);
-
-// Create Dino Objects
-const anklyosaurusObj = new Dino(
-  "Anklyosaurus",
-  "./images/anklyosaurus.png",
-  facts[anklyosaurusRandom],
-  10500,
-  55,
-
-);
-
-const brachiosaurusObj = new Dino(
-  "Brachiosaurus",
-  "./images/brachiosaurus.png",
-  facts[brachiosaurusRandom],
-  70000,
-  372,
-);
-
-const elasmosaurusObj = new Dino(
-  "Elasmosaurus",
-  "./images/elasmosaurus.png",
-  facts[elasmosaurusRandom],
-  16000,
-  59,
-);
-
-const pigeonObj = new Dino(
-  "Pigeon",
-  "./images/pigeon.png",
-  facts[pigeonRandom],
-  0.5,
-  9,
-);
-
-const pteranodonObj = new Dino(
-  "Pteranodon",
-  "./images/pteranodon.png",
-  facts[pteranodonRandom],
-  44,
-  20,
-);
-
-const stegosaurusObj = new Dino(
-  "Stegosaurus",
-  "./images/stegosaurus.png",
-  facts[stegosaurusRandom],
-  11600,
-  79,
-);
-
-const triceratopsObj = new Dino(
-  "Triceratops",
-  "./images/triceratops.png",
-  facts[triceratopsRandom], 13000,
-  114,
-);
-
-const tyrannosaurusRexObj = new Dino(
-  "Tyrannosaurus Rex",
-  "./images/tyrannosaurusrex.png",
-  facts[tyrannosaurusRexRandom],
-  11905,
-  144,
-);
-
-//Human constructor
-
-function Human(name, height, weight, diet) {
-  this.name = name;
   this.height = height;
-  this.weight = weight;
-  this.diet = diet
 }
 
-// Use IIFE to get human data from form
-
-const getHumanData = (function () {
-  //HUMAN DOM
-  const humanWeightDOM = document.querySelector("#weight");
-  const humanDietDOM = document.querySelector("#diet");
-  const humanNameDOM = document.querySelector("#name");
-  const humanHeightDOM = document.querySelector("#height");
-
-  function getData() {
-    return {
-      nameValue: humanNameDOM.value,
-      weightValue: humanWeightDOM.value,
-      heightValue: humanHeightDOM.value,
-      humanDietValue: humanDietDOM.value
-
-    }
-  }
-
+/**
+ * @description fetch Dino data from json file and use Dino constructor to create Dino objects
+ * @returns {Array} Dino array
+ */
+const fetchDino = (() => {
+  const getDinoData = async () => {
+    const data = await fetch("./dino.json");
+    const results = await data.json();
+    const dinos = await results.Dinos.map((data) => {
+      const { species, weight, height, diet, fact, image } = data;
+      const dinoObj = new Dino(species, image, fact, weight, height);
+      return dinoObj;
+    });
+    return dinos;
+  };
   return {
-    getData
-  }
-})()
+    res: getDinoData,
+  };
+})();
 
-// Create Human Object
+/**
+ * @constructor  Human Constructor
+ * @param {string} species - The name of the Human
+ * @param {number} humanHeight - The height Human
+ * @param {number} humanWeight - The weight of the Human
+ * @param {string} humanDiet - The diet of the Human
+ */
+function Human(species, humanHeight, humanWeight, humanDiet) {
+  this.species = species;
+  this.humanHeight = humanHeight;
+  this.humanWeight = humanWeight;
+  this.humanDiet = humanDiet;
+}
+
+/**
+ * @description Create human data from the form
+ * @return {object}  Human data from the form
+ */
+const getHumanData = (function () {
+  return {
+    nameValue: document.querySelector("#name"),
+    weightValue: document.querySelector("#weight"),
+    heightValue: document.querySelector("#height"),
+    humanDietValue: document.querySelector("#diet"),
+  };
+})();
+
+/**
+ * @description Create human object using the human constructor
+ * @return {object}  created human object
+ */
 function createHumanObj() {
-  const humanData = getHumanData.getData();
-  const humanObj = new Human(humanData.nameValue, humanData.weightValue, humanData.heightValue, humanData.humanDietValue);
-  return humanObj
+  const humanHeight = getHumanData.heightValue.value;
+  const humanName = getHumanData.nameValue.value;
+  const humanWeight = getHumanData.weightValue.value;
+  const humanDiet = getHumanData.humanDietValue.value;
+  const humanObj = new Human(humanName, humanHeight, humanWeight, humanDiet);
+  return {
+    humanObj,
+  };
 }
 
 // Create Dino Compare Method 1
 // NOTE: Weight in JSON file is in lbs, height in inches.
-function checkWeight(dinoObj, humanObj) {
-  let message;
-  //convert  lbs to kg;
-  let dinoConvertedWeight = (dinoObj.weight * 0.453592)
-  //convert humans weight to number
-  let humanConvertedWeight = parseInt(humanObj.weightValue).toFixed(2)
-  if (dinoConvertedWeight > humanConvertedWeight) {
-    message = `This dino is ${(dinoConvertedWeight - humanConvertedWeight).toFixed(2)} old than the human`
-    return message
-  } else {
-
-    message = `This human is ${humanConvertedWeight - dinoConvertedWeight  } old than the Dino`
-  }
-}
+function checkWeight(dinoObj, humanObj) {}
 
 // Create Dino Compare Method 2
 // NOTE: Weight in JSON file is in lbs, height in inches.
-function checkHeight(dinoObj, humanObj) {
-
-}
-
+function checkHeight(dinoObj, humanObj) {}
 
 // Create Dino Compare Method 3
 // NOTE: Weight in JSON file is in lbs, height in inches.
-function typeOfDiet(dinoObj, humanObj) {
+function typeOfDiet(dinoObj, humanObj) {}
 
-}
-// Generate Tiles for each Dino in Array
-
-
-// Add tiles to DOM
-function addTtiles() {
-  //dino 1
-  anklyosaurusDOM.innerHTML = `<h3>${anklyosaurusObj.species}</h3>
-  <img src="${anklyosaurusObj.image}" alt="">
-  <p>${anklyosaurusObj.fact}
-  </p>`;
-
-  brachiosaurusDOM.innerHTML = `<h3>${brachiosaurusObj.species}</h3>
-  <img src="${brachiosaurusObj.image}" alt="">
-  <p>${brachiosaurusObj.fact}
-  </p>`;
-
-  elasmosaurusDOM.innerHTML = `<h3>${elasmosaurusObj.species}</h3>
-  <img src="${elasmosaurusObj.image}" alt="">
-  <p>${elasmosaurusObj.fact}
-  </p>`;
-
-  anklyosaurusDOM.innerHTML = `<h3>${anklyosaurusObj.species}</h3>
-  <img src="${anklyosaurusObj.image}" alt="">
-  <p>${anklyosaurusObj.fact}
-  </p>`;
-
-  triceratopsDOM.innerHTML = `<h3>${triceratopsObj.species}</h3>
-  <img src="${triceratopsObj.image}" alt="">
-  <p>${triceratopsObj.fact}
-  </p>`;
-
-  pteranodonDOM.innerHTML = `<h3>${pteranodonObj.species}</h3>
-  <img src="${pteranodonObj.image}" alt="">
-  <p>${pteranodonObj.fact}
-  </p>`;
-
-  stegosaurusDOM.innerHTML = `<h3>${stegosaurusObj.species}</h3>
-  <img src="${stegosaurusObj.image}" alt="">
-  <p>${stegosaurusObj.fact}
-  </p>`;
-
-  pigeonDOM.innerHTML = `<h3>${pigeonObj.species}</h3>
-  <img src="${pigeonObj.image}" alt="">
-  <p>${stegosaurusObj.fact}
-  </p>`;
-
-  tyrannosaurusRexDOM.innerHTML = `<h3>${tyrannosaurusRexObj.species}</h3>
-  <img src="${tyrannosaurusRexObj.image}" alt="">
-  <p>${tyrannosaurusRexObj.fact}
-  </p>`;
-
-  //Create human object and add to the dom
-  const humanData = createHumanObj()
-  let res = checkWeight(tyrannosaurusRexObj, getHumanData.getData())
-
-  humanDOM.innerHTML = `
-   <h3>${humanData.name}</h3>
-  <p>${res}</p>
- `
+/**
+ * @description Add tiles to the DOM
+ * @return {object}  Human data from the form
+ */
+async function addTtiles() {
+  //Get human data
+  const humanData = createHumanObj();
+  const dino = await fetchDino.res();
+  const results = dino
+    .slice(0, 4)
+    .concat(humanData.humanObj)
+    .concat(dino.slice(4, 8));
+  results.forEach((data) => {
+    const { species, fact, image, weight } = data;
+    grid.innerHTML += `
+      <div class="grid-item">
+          <h3>${species}</h3>
+          <img src="${image ? image : ""}" alt="" />
+          <p>${fact ? fact : ""}</p>
+        </div>
+    `;
+  });
 }
 
-// Remove form from screen
+/**
+ * @description Remove form from the DOM
+ */
 function removeForm() {
   dinoCompare.style.display = "none";
 }
-// On button click, prepare and display infographic
-btn.addEventListener("click", (e) => {
-  addTtiles();
-  removeForm()
-  let res = checkWeight(tyrannosaurusRexObj, getHumanData.getData())
-  console.log(res)
 
+/**
+ * @description On button click, prepare and display infographic
+ */
+btn.addEventListener("click", async (e) => {
+  addTtiles();
+  removeForm();
 });
