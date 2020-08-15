@@ -1,22 +1,26 @@
 /* General Styles */
 body {
   background: rgb(111, 208, 224);
-  background: linear-gradient(0deg, rgb(111, 208, 224) 0%, rgb(171, 228, 167) 100%);
-  font-family: 'Open Sans', sans-serif;
+  background: linear-gradient(
+    0deg,
+    rgb(111, 208, 224) 0%,
+    rgb(171, 228, 167) 100%
+  );
+  font-family: "Open Sans", sans-serif;
   text-align: center;
   min-height: 100vh;
 }
 
 h1 {
   margin: 0;
-  font-family: 'Frijole', cursive;
+  font-family: "Frijole", cursive;
   font-size: 3em;
   font-weight: 400;
 }
 
 h2,
 h3 {
-  font-family: 'Oswald', sans-serif;
+  font-family: "Oswald", sans-serif;
 }
 
 @media (min-width: 650px) {
@@ -104,7 +108,7 @@ p {
 }
 
 .grid-item p {
-  background: rgba(000, 000, 000, .3);
+  background: rgba(000, 000, 000, 0.3);
   position: absolute;
   bottom: 0;
   width: 100%;
@@ -129,7 +133,7 @@ form p {
   margin-bottom: 0.3em;
   font-size: 1.3em;
   font-weight: 600;
-  font-family: 'Oswald', sans-serif;
+  font-family: "Oswald", sans-serif;
 }
 
 input {
